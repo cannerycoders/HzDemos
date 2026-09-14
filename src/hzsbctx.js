@@ -51,7 +51,12 @@ export class HzSbCtx
       App.FetchLocalFile(payload.url, payload.filetype) .then((contents) => {
           let text, buffer;
           if (payload.filetype == "arraybuffer")
-            buffer = contents.buffer;
+          {
+            if(contents instanceof ArrayBuffer)
+              buffer = contents;
+            else
+              buffer = contents.buffer;
+          }
           else
             text = contents;
           const rpayload = { 

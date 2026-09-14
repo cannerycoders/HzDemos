@@ -99,7 +99,30 @@ export class App
 
   async FetchLocalFile(fileref, filetype="text")
   {
-    throw new Error("File not found " + fileref);
+    try
+    {
+      const response = await fetch(fileref);
+      if(!response.ok)
+        throw new Error(`HTTP error: Status ${response.status}.`);
+      let data;
+      switch(filetype)
+      {
+      case "arraybuffer":
+        data = await response.arrayBuffer();
+        break;
+      case "json":
+        data = await response.json();
+        break;
+      default:
+        data = await response.text();
+        break;
+      }
+      return data;
+    }
+    catch(err)
+    {
+      throw new Error(`Failed to fetch file ${fileref}: ` + err);
+    }
   }
 
   polar2Cartesian(lng, lat)

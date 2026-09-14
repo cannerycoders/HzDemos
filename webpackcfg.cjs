@@ -36,6 +36,10 @@ module.exports = (env, argv) =>
             to: "img",
           },
           {
+            from: "src/snd",
+            to: "snd",
+          },
+          {
             from: "src/favicon.png",
             to: "favicon.png",
           },

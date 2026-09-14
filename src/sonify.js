@@ -104,6 +104,46 @@ async function *QuakeSonify(sbctx)
     return g.voicemgr({voices});
   }
 
+  async function getAlert()
+  {
+    // let alert = await Anode.New("Hz.FM7", {
+    //   preset: {
+    //     Bank: 2,
+    //     Patch: 2, // SCHLBELL
+    //     Gain: 1.5
+    //   }
+    // });
+    // let alert = await scene.NewAnode("Hz.Genish", {name: "Alert"});
+    // await alert.LoadPreset({genish: {
+    //   name: "fm2",
+    //   code: GenFM2.toString(), 
+    // }});
+
+    let alert = await Anode.New("Hz.Samplo", {
+      preset: {
+        A: 0.1,
+        D: 0.01,
+        S: 1,
+        R: 3, 
+        Gain: 2,
+        instrument: {
+          kit: "Workspace", 
+          inst: ["./snd/bell.mp3"]
+        },
+      }
+    });
+    alert.play = function(maxmag)
+    {
+      // let nnotes = Math.round(maxMag); 
+      // const interval = scene.Seconds(5) / nnotes;
+      const vel = Math.min(maxmag/6, 1);
+      const dur = scene.Seconds(2 * maxmag);
+      alert.Note(0, vel, dur, 0);
+      // await scene.Wait(interval*1.05);
+    }
+    return alert;
+  }
+
   /* --------------------------------------------------------------- */
   const showOsc = true;
   const showNoiseMix = true;
@@ -171,18 +211,8 @@ async function *QuakeSonify(sbctx)
   if(showNoiseMix)
     qmix.Show();
 
-  // let alert = await Anode.New("Hz.FM7", {
-  //   preset: {
-  //     Bank: 2,
-  //     Patch: 2, // SCHLBELL
-  //     Gain: 1.5
-  //   }
-  // });
-  let alert = await scene.NewAnode("Hz.Genish", {name: "Alert"});
-  await alert.LoadPreset({genish: {
-    name: "fm2",
-    code: GenFM2.toString(), 
-  }});
+
+  let alert = await getAlert();
   if(showAlert)
     alert.Show();
 
@@ -203,20 +233,6 @@ async function *QuakeSonify(sbctx)
     q.velocity = 1; 
   }
 
-  async function playAlert(maxMag)
-  {
-    // console.log(`alert ${maxMag} -> ${vel}`);
-    let nnotes = Math.round(maxMag); 
-    const vel = Math.min(maxMag/6, 1);
-    const interval = scene.Seconds(5) / nnotes;
-    const dur = scene.Seconds(1);
-    for(let n=0;n<nnotes;n++)
-    {
-      // alert.Note(45+2*n, vel, dur, 0);
-      alert.Note(47, vel, dur, 0);
-      await scene.Wait(interval*1.05);
-    }
-  }
 
   async function quakeOn(qevent)
   {
@@ -359,7 +375,7 @@ async function *QuakeSonify(sbctx)
       quakeOff(msg.quake);
       break;
     case "Alert":
-      playAlert(msg.maxmag); // see app.js
+      alert.play(msg.maxmag);
       break;
     case "onCameraMove":
       break;
