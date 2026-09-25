@@ -8,9 +8,6 @@
 import {HzSbCtx} from "./hzsbctx.js";
 import {HzEventHub} from "./hzeventhub.js";
 
-// const sbURL = "http://localhost:8081/sandbox/index.html?sbId=0";
-const sbURL = "https://cannerycoders.com/apps/HzWeb/sandbox/index.html?sbId=0";
-
 export class HzBridge extends HzEventHub
 {
   constructor(div)
@@ -31,6 +28,13 @@ export class HzBridge extends HzEventHub
       this.newSandbox();
       // nb; we can't access sandbox content directly
     });
+
+    const sbURL = window.location.host.startsWith("localhost") ?
+      "http://localhost:8081/sandbox/index.html?sbId=0&logfwd=false" :
+      "https://cannerycoders.com/apps/HzWeb/sandbox/index.html?sbId=0&logfwd=false";
+    
+    
+    console.debug(`hzbridge to ${sbURL}`);
 
     this.iframe.src = sbURL;
     this.sbWin = this.iframe.contentWindow;

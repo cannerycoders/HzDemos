@@ -35,90 +35,9 @@ async function *QuakeSonify(sbctx)
     }
   }
   /* --------------------------------------------------------------- */
-  // we use GenFM2 rather than FM7 because we want long sustained notes.
-  function GenFM2(g, nvoices = 10) 
-  {
-    function oneVoice(g)
-    {
-      let freq = g.param(0);
-      let harmonicity = g.param(0);
-      let modIndex = g.param(0);
-      // A ~= 2 ^ ((0-99)/8), to produce a range of 0-<20
-      let env = g.adsr(0, 0, 0, 0);
-      let modEnv = g.adsr(0, 0, 0, 0);
-      let modFreq = g.mul(freq, harmonicity);
-      // let modAmount = g.mul(modIndex, modFreq);
-      let modOsc = g.cycle(modFreq);
-      let fm = g.add(freq, g.mul3(modEnv, modIndex, modOsc));
-      let osc = g.sin(fm);
-      let velocity = .8; // not a param, so more efficiently triggered.
-      let monosynth = g.mul3(env, osc, velocity);
-      return g.voice(monosynth,
-      {
-        _triggers: {
-          onoff: [
-            {idx: env.getTriggerIdx()},
-            {idx: modEnv.getTriggerIdx()},
-          ],
-          frequency: [
-            {idx: freq.getValueIdx()},
-          ],
-          velocity: [
-            {idx: monosynth.getParamPokeIdx("2")},
-          ]
-        },
-        A: {idx: env.getParamPokeIdx("_attack"), unit:"timecoeff"},
-        D: {idx: env.getParamPokeIdx("_decay"), unit:"timecoeff"},
-        S: {idx: env.getParamPokeIdx("_sustain")},
-        R: {idx: env.getParamPokeIdx("_release"), unit:"timecoeff"},
-  
-        // FM
-        Harmonicity: {idx: harmonicity.getValueIdx()},
-        ModIndex: {idx: modIndex.getValueIdx()},
-        ModA: {idx: modEnv.getParamPokeIdx("_attack"), unit:"timecoeff"},
-        ModD: {idx: modEnv.getParamPokeIdx("_decay"), unit:"timecoeff"},
-        ModS: {idx: modEnv.getParamPokeIdx("_sustain")},
-        ModR: {idx: modEnv.getParamPokeIdx("_release"), unit:"timecoeff"},
-      }); 
-    }
-
-    // short ModA, long ModR
-    let voices = [];
-    g.param(.25, "VGain", {min:0, max:1, default:.25});
-    g.param(.5, "VPan", {min:0, max:1, default:.5});
-    g.param(.2, "A", {min:.01, max:5, default:.2, 
-            group:"Env", groupbgd:"#321"});  // seconds
-    g.param(.5, "D", {min:0, max:5, default:.5, group:"Env"}); // seconds
-    g.param(.8, "S", {min:0, max:1, default:.8, group:"Env"});
-    g.param(3, "R", {min:0, max:5, default:3, group:"Env"}); // seconds
-    g.param(.3, "Harmonicity", {
-      label:"Ratio", delta: .1, max: 10, min: .1, default: .3, 
-      group: "FM", groupbgd: "rgb(17, 44, 34)"});
-    g.param(20, "ModIndex", {delta: .1, max: 20, min: .1, default: 20, group: "FM"});
-    g.param(.01, "ModA", {delta:.05, min:.01, max: 10, default: 1, group:"FM"});
-    g.param(.1, "ModD", {delta:.05, max: 10, group:"FM"});
-    g.param(1, "ModS", {min:0, max:1, default:1, group:"FM"});
-    g.param(2, "ModR", {min:0, max:5, default:2, group:"FM"});
-    for (let i = 0;i < nvoices;i++)
-      voices.push(oneVoice(g));
-    return g.voicemgr({voices});
-  }
 
   async function getAlert()
   {
-    // let alert = await Anode.New("Hz.FM7", {
-    //   preset: {
-    //     Bank: 2,
-    //     Patch: 2, // SCHLBELL
-    //     Gain: 1.5
-    //   }
-    // });
-    // let alert = await scene.NewAnode("Hz.Genish", {name: "Alert"});
-    // await alert.LoadPreset({genish: {
-    //   name: "fm2",
-    //   code: GenFM2.toString(), 
-    // }});
-
     let alert = await Anode.New("Hz.Samplo", {
       preset: {
         A: 0.1,
@@ -145,23 +64,54 @@ async function *QuakeSonify(sbctx)
   }
 
   /* --------------------------------------------------------------- */
+  const doOsc = true;
+  const doNoise = true;
+  const doAlert = true;
+
   const showOsc = true;
   const showNoiseMix = true;
   const showNoiseVoice = false;
+
   const showAlert = false;
   const showGraph = false;
-
-  const skipNoise = false;
-  const skipOsc = false;
+  const quakeVerbose = false;
 
   // console.log("Running QuakeSonify");
 
-  let scene = await Ascene.BeginFiber(sbctx);
+  let scene = await Ascene.BeginFiber(sbctx, {
+    AEngine: {
+      verbosity: 1, 
+      latencyHint:"playback"
+    }});
+  let lastUnderruns = 0;
+
+  // the "click" is apparently produced by underrun events.
+  // this is ameliorated by the latencyHint: "playback"
+  function checkStats(stats)
+  {
+    setTimeout(() =>
+    {
+      if(stats.underrunEvents != lastUnderruns)
+      {
+        lastUnderruns = stats.underrunEvents;
+        console.log(JSON.stringify(stats, null, 2));
+      }
+      checkStats(stats);
+    }, 5000);
+  }
+
+  if(Aengine.audioContext.playbackStats)
+    checkStats(Aengine.audioContext.playbackStats);
+  else
+    console.log("browser doesn't support playbackStats");
+
   let dac = scene.GetDAC();
   await dac.LoadPreset({
     Gain: .6
   });
   dac.Show();
+
+  let out = dac;
 
   let sscope = await Anode.New("Hz.SpectreScope", {name:"QuakeScope"});
   scene.Chain(sscope, dac);
@@ -176,49 +126,68 @@ async function *QuakeSonify(sbctx)
   });
   scene.Chain(compress, sscope);
   compress.Show();
+  out = compress;
 
-  let out = compress;
-
-  let osc = await Anode.New("Hz.Osc", {
-    preset: {
-      Waveform: 0, // sine
-      Gain: 1,
-      A: 5,
-      D: .01,
-      S: 1,
-      R: 5,
-      Unison: 3,
-      Spread: 1,
-      Detune: .3
+  let osc;
+  if(!doOsc)
+    osc = null;
+  else
+  {
+    osc = await Anode.New("Hz.Osc", {
+      preset: {
+        Waveform: 0, // sine
+        Gain: 1,
+        A: 5,
+        D: .01,
+        S: 1,
+        R: 5,
+        Unison: 3, // was 3
+        Spread: 1,
+        Detune: .3
+      }
+    });
+    let oscmix = await Anode.New("Hz.Mix", {
+      name: "Tone",
+      preset: {
+        Gain: .14 
+      }
+    });
+    
+    if(showOsc)
+    {
+      oscmix.Show();
+      // osc.Show();
     }
-  });
-  let oscmix = await Anode.New("Hz.Mix", {
-    name: "Tone",
-    preset: {
-      Gain: .14 
-    }
-  });
 
-  if(showOsc)
-    oscmix.Show();
+    scene.Chain(osc, oscmix, out);
 
-  let qmix = await Anode.New("Hz.Mix", {
-    name: "Rumble",
-    preset: {
-      Gain: 2.5
-    }
-  });
-  if(showNoiseMix)
-    qmix.Show();
+    if(showGraph)
+      scene.VisualizeGraph();
+  }
 
+  let noisemix;
+  if(doNoise)
+  {
+    noisemix = await Anode.New("Hz.Mix", {
+      name: "Rumble",
+      preset: {
+        Gain: 2.5
+      }
+    });
+    if(showNoiseMix)
+      noisemix.Show();
+    scene.Chain(noisemix, out);
+  }
+  else
+    noisemix = null;
 
-  let alert = await getAlert();
-  if(showAlert)
-    alert.Show();
-
-  scene.Chain(osc, oscmix, out);
-  scene.Chain(alert, out);
-  scene.Chain(qmix, out);
+  if(doAlert)
+  {
+    alert = await getAlert();
+    if(showAlert)
+      alert.Show();
+    scene.Chain(alert, out);
+  }
 
   const quakeCtx = 
   {
@@ -236,12 +205,13 @@ async function *QuakeSonify(sbctx)
 
   async function quakeOn(qevent)
   {
-    console.log("quakeOn");
+    if(quakeVerbose)
+      console.log("quakeOn");
     let q;
     if(quakeCtx.inactiveQuakes.length == 0)
     {
       let noise, f1, f2, f3, mix;
-      if(!skipNoise)
+      if(doNoise)
       {
         noise = await Anode.New("Hz.Noise", {
           acfg: {mode: "mono"},
@@ -297,7 +267,7 @@ async function *QuakeSonify(sbctx)
         scene.Chain(noise, f1, mix);
         scene.Chain(noise, f2, mix);
         scene.Chain(noise, f3, mix);
-        scene.Chain(mix, qmix);
+        scene.Chain(mix, noisemix);
         if(showGraph)
         {
           if(quakeCtx.showTimeout == null)
@@ -321,7 +291,8 @@ async function *QuakeSonify(sbctx)
       q = quakeCtx.inactiveQuakes.pop();
 
     q.qevent = qevent; // quake.event
-    console.log(`${qevent.id}: NoteOn`)
+    if(quakeVerbose)
+      console.log(`${qevent.id}: NoteOn`)
     quakeCtx.activeQuakes.push(q);
 
     assignNoteAttributes(q);
@@ -333,7 +304,7 @@ async function *QuakeSonify(sbctx)
       q.mix.SetParam("Gain", qgain);
       q.noise.NoteOn(30, 1); // noise: note is ignored
     }
-    if(!skipOsc)
+    if(quakeCtx.osc)
     {
       quakeCtx.osc.SetParam("Pan", pan); // osc pan is -1,1 
       q.noteId = quakeCtx.osc.NoteOn(q.note, q.velocity)[0];
@@ -347,10 +318,16 @@ async function *QuakeSonify(sbctx)
     {
       if(q.qevent.id == qevent.id)
       {
-        console.log(`${qevent.id} NoteOff`);
-        q.noise.NoteOff(30, 1);
-        if(!skipOsc)
+        if(q.noise)
+        {
+          if(quakeVerbose)
+            console.log(`${qevent.id} NoteOff`);
+          q.noise.NoteOff(30, 1);
+        }
+        if(quakeCtx.osc)
+        {
           quakeCtx.osc.NoteOff(q.note, 1, 0, q.noteId);
+        }
         quakeCtx.inactiveQuakes.push(q);
         return false;
       }
@@ -375,7 +352,8 @@ async function *QuakeSonify(sbctx)
       quakeOff(msg.quake);
       break;
     case "Alert":
-      alert.play(msg.maxmag);
+      if(alert)
+        alert.play(msg.maxmag);
       break;
     case "onCameraMove":
       break;
