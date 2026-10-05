@@ -14,8 +14,8 @@ export class App
     this.headerTitle = document.body.querySelector(".Header .Title");
     this.headerTitle.innerHTML = `
     <img style="height:100px" src="./img/logo.png"><br>
-    <span id="instruction">To audition: press the pulsing EAR <i style="font-size:2em;color:red;">&darr;</i>.</span>
-    `;
+    <span id="instruction"><i style="font-size:2em;color:red;">&darr;</i>
+    To audition: press the pulsing ear.</span>`;
 
     this.instruction = this.headerTitle.querySelector("#instruction");
 
