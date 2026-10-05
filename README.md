@@ -1,24 +1,20 @@
 
-<img src="src/img/quakesounds.jpg" alt="QuakeSounds Logo" width="500">
+<img src="src/about.png" alt="QuakeSounds Logo" width="400">
 
-
-[QuakeSounds Live](https://cannerycoders.github.io/QuakeSounds/)
 
 ## info
 
-`QuakeSounds` produces an ambient soundscape representing the live earthquakes as provided by the USGS earthquake hazards program.
-It can be used as a comforting and sometimes alarming background in your daily grind.
+`HzDemos` is a growing collection of demonstrations of the programmable
+audio engine, [Hz](https://cannerycoders.com/Hz).  Here's you'll find
+source-code for the demos.
 
-`QuakeSounds` requires big speakers and therefore isn't suitable for running on mobile devices.
-
-`QuakeSounds` also demonstrates the plumbing required to embed [HzWeb](https://cannerycoders.com/Hz) sound-engine into your web-app.
+We welcome you to visit the [live site](https://cannerycoders.github.io/HzDemos/)
+and click around!
 
 
 ## credits
 
-`QuakeSounds` was built by [Cannery Coders](https://cannerycoders.com). It leverages the open-source packages,  `three-globe` and `Three.js`.
-
-`USGS` offers valuable services courtesy of the US Government.
+`HzDemos` was built by [Cannery Coders](https://cannerycoders.com).
 
 ## caveats
 

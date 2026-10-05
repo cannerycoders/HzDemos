@@ -1,8 +1,7 @@
-import * as THREE from "three";
-import ThreeGlobe from "three-globe";
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls.js";
-import * as solar from "solar-calculator";
+const App = window._app = {
+  isTouchDevice: window.matchMedia("(pointer: coarse)").matches,
+};
 
-import { App } from './app.js';
-
-new App(THREE, ThreeGlobe, TrackballControls, solar);
+document.body.classList.toggle("touch", App.isTouchDevice);
+if(!App.isTouchDevice)
+  document.body.classList.remove("loading");

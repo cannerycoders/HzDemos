@@ -1,0 +1,32 @@
+<head>
+  <link href="/css/index.css" rel="stylesheet">
+  <script src="/header.mjs" defer></script>
+  <link rel="icon" href="favicon.png">
+  <style> 
+  #hzbridge {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+  }
+  #hzbridge iframe {
+    width: 100%;
+    flex: 1;
+  }
+  </style>
+
+</head>
+
+<body class="loading">
+  <site-header></site-header>
+  <div class="DesktopOnly" id="hzbridge"></div>
+
+  <div class="TouchOnly">
+    <div style="text-align:center;padding-top:30px">
+      <img src="img/logo.png" style="border-radius:10px">
+      <h1>Hs demos require big speakers.</h1>
+    </div>
+  </div>
+
+  <script type="module" src="./index.js"></script>
+
+</body>

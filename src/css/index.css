@@ -1,0 +1,104 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #000;
+  font-size: clamp(15px, 1.5vw, 18px);
+  color: #aaa;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+body.loading .TouchOnly {
+  display: flex;
+}
+
+body.loading .DesktopOnly {
+  display: none;
+}
+
+/* After initialization */
+body:not(.loading):not(.touch) .TouchOnly {
+  display: none;
+}
+
+body.touch .DesktopOnly {
+  display: none;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 5vw, 3rem);
+}
+
+h2 {
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  color: #aac;
+}
+
+.Header {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.Header .Title {
+  flex: 1;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 12px;
+}
+
+.Header .Links {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  gap: 10px
+}
+
+.Links  svg {
+  width: 40px;
+  height: 40px;
+  fill: #444;
+}
+
+.Titlebar > div
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Demos
+{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+
+  padding: 20px;
+  border-style: solid;
+  border-radius: 10px;
+  border-color: #364b69;
+  border-width: thin;
+
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.Demolink
+{
+  width: 220px;
+}

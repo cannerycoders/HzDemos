@@ -1,4 +1,4 @@
-import {HzEventHub} from "./hzeventhub.js";
+import {HzEventHub} from "@hzbridge/hzeventhub.js";
 
 export class Rumble extends HzEventHub // we emit QuakeOn, QuakeOff, FlyTo
 {

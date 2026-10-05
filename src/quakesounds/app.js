@@ -1,5 +1,5 @@
 import {Rumble} from "./rumble.js";
-import { HzBridge } from "./hzbridge.js";
+import { HzBridge } from "@hzbridge/hzbridge.js";
 import { RunQuakeSonify } from "./sonify.js";
 import { DayNightShader } from "./daynightshader.js";
 
