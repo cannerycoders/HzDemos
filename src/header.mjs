@@ -1,12 +1,27 @@
-class SiteHeader extends HTMLElement 
-{
+// header.mjs
+
+// 1. Calculate the site root dynamically based on the script's location
+const scriptURL = new URL(import.meta.url);
+const isGitHubPages = scriptURL.hostname.endsWith('github.io');
+const repoName = isGitHubPages ? scriptURL.pathname.split('/')[1] : '';
+const siteRoot = repoName 
+  ? `${scriptURL.origin}/${repoName}/` 
+  : `${scriptURL.origin}/`;
+
+// Helper function to resolve asset paths relative to the site root
+function getAssetPath(relativePath) {
+  const cleanPath = relativePath.replace(/^\/+/, '');
+  return `${siteRoot}${cleanPath}`;
+}
+
+class SiteHeader extends HTMLElement {
   connectedCallback() {
     // This runs automatically when <site-header> is added to the page
     this.innerHTML = `
 <div class="Header">
 <div class="Title"></div>
 <div class="Links">
-  <a href="/"> <img src="/icon64.png"> </a>
+  <a href="${siteRoot}"> <img src="${getAssetPath('icon64.png')}"> </a>
   <a target="_blank" href="https://github.com/cannerycoders/HzDemos">
     <svg aria-hidden="true" focusable="false" 
       viewBox="0 0 24 24" width="24" height="24" 
@@ -20,5 +35,5 @@ class SiteHeader extends HTMLElement
   }
 }
 
-// Register the custom tag name (must contain a hyphen)
-customElements.define('site-header', SiteHeader);
+// Don't forget to register your custom element if you haven't already!
+customElements.get('site-header') || customElements.define('site-header', SiteHeader);
