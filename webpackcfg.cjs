@@ -31,6 +31,11 @@ const projects = [
     source: "src/grainfilter",
     destination: "grainfilter"
   },
+  {
+    name: "in-c/index",
+    source: "src/in-c",
+    destination: "in-c"
+  },
 ];
 
 module.exports = (env, argv) =>
