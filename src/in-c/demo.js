@@ -1,4 +1,6 @@
-const inc_hz = `
+async function demo(fiberCtx)
+{
+  const inc_hz = `
 // Terry Riley's 'In C'.
 // https://thirdcoastpercussion.com//downloads/2015/04/Terry-Riley-In-C-concert2.pdf
 
@@ -265,20 +267,17 @@ Song(Id:"In C")
     
 }`;
 
-async function demo(fiberCtx)
-{
   const help = `
 <p>
 This is a demonstration of Hz's support for songbook.hz notation. The actual
 notation isn't presented here, nor is Hz's live-performance visualization.
 If these topics are of interest, there's no substitute for running the demo
 in directly in <a target="_blank" href="https://cannerycoders.com/apps/HzWeb">Hz</a>.  
-There you can inspect and modifying the transcription, author voices and tracks,
+There you can inspect and modify the song, author voices and tracks,
 manipulate timing, etc.
 </p> <p>
-The performance is based on a transcription of the seminal minimalist 
-composition by Terry Riley.  In this demo you can tweak the individual 
-voices and effects.  
+The 'song' is a transcription of the seminal minimalist composition by 
+Terry Riley.  In this demo you can tweak the individual voices and effects.  
 </p> <p>
 From Wikipedia: In C is a composition by Terry Riley from 1964. It is one of the 
 most successful works by an American composer and a seminal example of 

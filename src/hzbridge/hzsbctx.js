@@ -48,7 +48,10 @@ export class HzSbCtx
     });
     this.On("localfetch", (payload) =>
     {
-      App.FetchLocalFile(payload.url, payload.filetype) .then((contents) => {
+      if(payload.url.startsWith("/_ws_/"))
+        payload.url = payload.url.slice(6);
+      App.FetchLocalFile(payload.url, payload.filetype)
+      .then((contents) => {
           let text, buffer;
           if (payload.filetype == "arraybuffer")
           {

@@ -87,22 +87,34 @@ a:hover {
 
 .Demos
 {
-  display:flex;
-  align-items: center;
-  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;         /* Allows items to wrap onto new lines vertically */
+  justify-content: flex-start; /* Aligns wrapped items starting from the left */
+  align-items: flex-start;     /* Keeps items aligned at the top of each row */
   gap: 25px;
-
   padding: 20px;
+  max-width: 90%;          /* Your max-width constraint */
   border-style: solid;
   border-radius: 10px;
   border-color: #011129;
   border-width: thin;
-
-  margin-left: 100px;
-  margin-right: 100px;
+  margin-left: auto;       /* Centers the .Demos container itself horizontally */
+  margin-right: auto;
 }
 
 .Demolink
 {
   width: 220px;
+}
+
+.Chicklet
+{
+  border-radius: 20px;
+}
+
+.Header .Chicklet
+{
+  height: 100px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }

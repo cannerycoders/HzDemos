@@ -1,20 +1,13 @@
 import {Rumble} from "./rumble.js";
-import { HzBridge } from "@hzbridge/hzbridge.js";
+import { AppBase } from "@hzbridge/appbase.js";
 import { RunQuakeSonify } from "./sonify.js";
 import { DayNightShader } from "./daynightshader.js";
 
-export class App
+export class App extends AppBase
 {
   constructor(THREE, ThreeGlobe, TrackballControls, solar)
   {
-    window.App = this;
-
-    this.isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
-    document.body.classList.toggle("touch", this.isTouchDevice);
-    if(this.isTouchDevice) return;
-
-    document.body.classList.remove("loading");
-    this.hzbridge = new HzBridge(document.getElementById("hzbridge"));
+    super();
 
     this.THREE = THREE;
     this.ThreeGlobe = ThreeGlobe;
@@ -97,33 +90,7 @@ export class App
 
   }
 
-  async FetchLocalFile(fileref, filetype="text")
-  {
-    try
-    {
-      const response = await fetch(fileref);
-      if(!response.ok)
-        throw new Error(`HTTP error: Status ${response.status}.`);
-      let data;
-      switch(filetype)
-      {
-      case "arraybuffer":
-        data = await response.arrayBuffer();
-        break;
-      case "json":
-        data = await response.json();
-        break;
-      default:
-        data = await response.text();
-        break;
-      }
-      return data;
-    }
-    catch(err)
-    {
-      throw new Error(`Failed to fetch file ${fileref}: ` + err);
-    }
-  }
+  GetDemoScript() { return ""; }
 
   polar2Cartesian(lng, lat)
   {

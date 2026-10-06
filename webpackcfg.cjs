@@ -36,6 +36,21 @@ const projects = [
     source: "src/in-c",
     destination: "in-c"
   },
+  {
+    name: "spectredelay/index",
+    source: "src/spectredelay",
+    destination: "spectredelay"
+  },
+  {
+    name: "hanoi/index",
+    source: "src/hanoi",
+    destination: "hanoi"
+  },
+  {
+    name: "retrovocoder/index",
+    source: "src/retrovocoder",
+    destination: "retrovocoder"
+  },
 ];
 
 module.exports = (env, argv) =>
