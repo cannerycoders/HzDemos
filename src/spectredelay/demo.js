@@ -34,7 +34,7 @@ hypnotic, and wonderfully eerie. Thus saith Gemini.`;
 
   // Mono Samplo
   let voice = await scene.NewAnode("Hz.Samplo", {acfg});
-  let files = [path.join(fiberCtx.GetCWD(), "../snd/obama.wav")];
+  let files = ["../snd/obama.wav"];
   await voice.LoadPreset({
     instrument: {kit: "Workspace", inst: files}
   });
