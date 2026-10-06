@@ -272,7 +272,7 @@ Song(Id:"In C")
 This is a demonstration of Hz's support for songbook.hz notation. The actual
 notation isn't presented here, nor is Hz's live-performance visualization.
 If these topics are of interest, there's no substitute for running the demo
-in directly in <a target="_blank" href="https://cannerycoders.com/apps/HzWeb">Hz</a>.  
+directly in <a target="_blank" href="https://cannerycoders.com/apps/HzWeb">Hz</a>.  
 There you can inspect and modify the song, author voices and tracks,
 manipulate timing, etc.
 </p> <p>
@@ -289,7 +289,8 @@ added to the National Recording Registry of the United States Library of
 Congress in 2022. The piece has inspired many minimalist and postminimalist 
 composers, including Philip Glass and Steve Reich as well as pop and rock 
 musicians.`;
-  const attrib = `<i style='font-size:.8em'>logo snipped from photo by Michael Bednarek - Own work, CC0, 
+  const attrib = `<i style='font-size:.8em'>logo snipped from photo of a
+Riley sketch taken by Michael Bednarek - own work, CC0, 
 https://commons.wikimedia.org/w/index.php?curid=194126225.</i>`;
   let str = inc_hz;
   let songbook = new Songbook(str, "In C.hz"); 
