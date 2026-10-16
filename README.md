@@ -8,7 +8,7 @@
 web-based audio environment, [Hz](https://cannerycoders.com/Hz).  Here's 
 you'll find source-code for the demos.
 
-We welcome you to visit the [live site](https://cannerycoders.github.io/HzDemos/)
+We invite you to visit the [live site](https://cannerycoders.github.io/HzDemos/)
 and click around!
 
 
