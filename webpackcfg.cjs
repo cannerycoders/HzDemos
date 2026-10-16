@@ -51,6 +51,11 @@ const projects = [
     source: "src/retrovocoder",
     destination: "retrovocoder"
   },
+  {
+    name: "radio/index",
+    source: "src/radio",
+    destination: "radio"
+  },
 ];
 
 module.exports = (env, argv) =>
@@ -86,7 +91,7 @@ module.exports = (env, argv) =>
       to: project.destination,
       globOptions: {
         ignore: [
-          "**/*.js",
+          "*.js",
           "**/_nopub/**",
         ],
       },
