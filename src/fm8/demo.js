@@ -3,7 +3,7 @@ async function demo(fiberCtx)
   const help = `
 This demo of the Hz.FM8 plugin produces notes from randomly generated preset 
 configurations.  Marvel at the range of cool sounds FM can genrate!
-Attempt to pierce the mysteries of the modulation matrix!
+Unravel the mysteries of the modulation matrix!
 
 Wikipedia tells us:
 
