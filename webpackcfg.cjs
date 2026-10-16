@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 const CopyPlugin = require("copy-webpack-plugin");
 const { LicenseWebpackPlugin } = require("license-webpack-plugin");
 
@@ -56,6 +57,11 @@ const projects = [
     source: "src/radio",
     destination: "radio"
   },
+  {
+    name: "fm8/index",
+    source: "src/fm8",
+    destination: "fm8"
+  },
 ];
 
 module.exports = (env, argv) =>
@@ -91,11 +97,24 @@ module.exports = (env, argv) =>
       to: project.destination,
       globOptions: {
         ignore: [
-          "*.js",
+          "**/*.js",
           "**/_nopub/**",
         ],
       },
     });
+
+    if(fs.existsSync(`${project.source}/rtapp`))
+    {
+      copyPatterns.push({
+        from: `${project.source}/rtapp`,
+        to: `${project.destination}/rtapp`,
+        globOptions: {
+          ignore: [
+            "**/_nopub/**",
+          ]
+        }
+      });
+    }
   }
 
   return {

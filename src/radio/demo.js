@@ -21,7 +21,7 @@ const {BuildRadioButtons, ToggleStation} = await fiberCtx.Require("./rtapp/gui.j
 const {Stations, ActivateStation} = await fiberCtx.Require("./rtapp/stations.js");
 state.substations = Random.Shuffle(Stations).slice(0, state.maxStations);
 
-BuildRadioButtons(state.substations, ActivateStation, state);
+let headlineEl = BuildRadioButtons(state.substations, ActivateStation, state);
 
 const {Morse, Feeds} = await fiberCtx.Require("./rtapp/morse.js");
 const {Headlines} = await fiberCtx.Require("./rtapp/headlines.js");
@@ -29,7 +29,7 @@ const {Modulator} = await fiberCtx.Require("./rtapp/modulator.js");
 const {Sweeper} = await fiberCtx.Require("./rtapp/sweeper.js");
 const {CreateInstruments} = await fiberCtx.Require("./rtapp/instruments.js");
 
-state.headlines =await Headlines(state.maxHeadlines); // <--- takes a few seconds
+state.headlines = await Headlines(state.maxHeadlines); // <--- takes a few seconds
 
 await CreateInstruments(state); // <-- takes a few seconds..
 
@@ -47,6 +47,7 @@ for(let txt of state.headlines)
   for await (const value of Sweeper(state))
     ;
     
+  headlineEl.innerText = txt;
   for await (const value of toMorse.PerformText(ascene, state.morseInst, txt))
     ;
 }

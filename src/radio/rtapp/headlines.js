@@ -8,7 +8,7 @@ async function headlines(maxlen)
     for (let i of dom.querySelectorAll("item"))
     {
       let headline = i.querySelector("title").textContent;
-      headlines.push(headline);
+      headlines.push("BBC: " + headline);
       if (headlines.length > maxlen)
         break;
     }
@@ -19,7 +19,7 @@ async function headlines(maxlen)
   {
     let zquote = await Util.FetchURL("https://zenquotes.io/api/random", "json");
     let z = zquote[0];
-    headlines.push(`${z.a}: ${z.q}`);
+    headlines.push(`ZenQuote ${z.a}: ${z.q}`);
   }
   catch (err)
   {}

@@ -80,7 +80,7 @@ class Morse
     this.minDur = minDur; // seconds
   }
     
-  /* PeroformText is an async generator that can be invoked thus:
+  /* PerformText is an async generator that can be invoked thus:
      *
      *  for await (const value of morse.PerformText(s, i, "hello")) 
      *      console.log(value);
